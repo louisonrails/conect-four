@@ -33,4 +33,42 @@ RSpec.describe Board do
       expect(board.grid[4][0]).to eq('O')
     end
   end
+
+  describe '#column_full?' do
+    it 'returns true when a column is full' do
+      board = described_class.new
+
+      6.times { board.drop_disc(0, 'X') }
+
+      expect(board.column_full?(0)).to be true
+    end
+
+    it 'returns false when a column is not full' do
+      board = described_class.new
+
+      board.drop_disc(0, 'X')
+
+      expect(board.column_full?(0)).to be false
+    end
+
+    it 'raises an error when dropping into a full column' do
+      board = described_class.new
+      6.times { board.drop_disc(0, 'X') }
+
+      expect { board.drop_disc(0, 'O') }
+        .to raise_error(StandardError)
+    end
+  end
+
+  describe '#full?' do
+    it 'returns true when the board is full' do
+      board = described_class.new
+
+      7.times do |col|
+        6.times { board.drop_disc(col, 'X') }
+      end
+
+      expect(board.full?).to be true
+    end
+  end
 end
