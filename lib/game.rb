@@ -12,4 +12,12 @@ class Game
   def turn_player
     @current_player = @current_player == @player1 ? @player2 : @player1
   end
+
+  def game_over?
+    @board.win_combination?(@current_player.symbol) || @board.full?
+  end
+
+  def game_tied?
+    @board.full? && !@board.win_combination?(@current_player.symbol)
+  end
 end
