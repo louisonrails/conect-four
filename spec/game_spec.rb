@@ -25,7 +25,7 @@ RSpec.describe Game do
     end
   end
 
-  describe '#turn' do
+  describe '#turn_player' do
     let(:board)   { Board.new }
     let(:player1) { Player.new('Dio', 'X') }
     let(:player2) { Player.new('Johnathan', 'O') }
@@ -112,6 +112,55 @@ RSpec.describe Game do
     context 'when the board is not full' do
       it 'returns false' do
         expect(game.game_tied?).to be false
+      end
+    end
+  end
+
+  describe '#turn' do
+    let(:board)   { instance_double(Board) }
+    let(:player1) { Player.new('Dio', 'X') }
+    let(:player2) { Player.new('Johnathan', 'O') }
+
+    subject(:game) { described_class.new(board, player1, player2) }
+
+    before do
+      # Silence output
+      allow(game).to receive(:print)
+      allow(game).to receive(:puts)
+    end
+
+    context 'when the move is valid' do
+      before do
+        allow(game).to receive(:gets).and_return("1\n")
+        allow(board).to receive(:column_full?).with(0).and_return(false)
+        allow(board).to receive(:drop_disc)
+      end
+
+      it 'drops a disc in the chosen column' do
+        expect(board).to receive(:drop_disc).with(0, 'X')
+        game.turn
+      end
+
+      it 'does not print an error message' do
+        expect(game).not_to receive(:puts).with('Invalid Move! Try Again')
+        game.turn
+      end
+    end
+
+    context 'when the column is full' do
+      before do
+        allow(game).to receive(:gets).and_return("1\n")
+        allow(board).to receive(:column_full?).with(0).and_return(true)
+      end
+
+      it 'does not drop a disc' do
+        expect(board).not_to receive(:drop_disc)
+        game.turn
+      end
+
+      it 'prints an invalid move message' do
+        expect(game).to receive(:puts).with('Invalid Move! Try Again')
+        game.turn
       end
     end
   end

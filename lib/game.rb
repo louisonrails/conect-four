@@ -20,4 +20,15 @@ class Game
   def game_tied?
     @board.full? && !@board.win_combination?(@current_player.symbol)
   end
+
+  def turn
+    print "#{@current_player.name}, it's your turn! Enter the column: "
+    column = gets.to_i - 1
+
+    unless @board.column_full?(column)
+      @board.drop_disc(column, @current_player.symbol)
+    else
+      puts 'Invalid Move! Try Again'
+    end
+  end
 end
