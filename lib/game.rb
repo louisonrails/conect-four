@@ -8,4 +8,8 @@ class Game
     @current_player = player1
     @winner = nil
   end
+
+  def turn_player
+    @current_player = @current_player == @player1 ? @player2 : @player1
+  end
 end
