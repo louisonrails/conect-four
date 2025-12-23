@@ -71,4 +71,41 @@ RSpec.describe Board do
       expect(board.full?).to be true
     end
   end
+
+  describe '#win_combination?' do
+    it 'detects a vertical win' do
+      board = Board.new
+
+      4.times { board.drop_disc(0, 'X') }
+
+      expect(board.win_combination?('X')).to be true
+    end
+
+    it 'detects a horizontal win' do
+      board = Board.new
+
+      4.times { |col| board.drop_disc(col, 'X') }
+
+      expect(board.win_combination?('X')).to be true
+    end
+
+    it 'detects a diagonal win (bottom-left to top-right)' do
+      board = Board.new
+
+      board.drop_disc(0, 'X')
+
+      board.drop_disc(1, 'O')
+      board.drop_disc(1, 'X')
+
+      2.times { board.drop_disc(2, 'O') }
+      board.drop_disc(2, 'X')
+
+      3.times { board.drop_disc(3, 'O') }
+      board.drop_disc(3, 'X')
+
+      expect(board.win_combination?('X')).to be true
+    end
+
+  end
+
 end
