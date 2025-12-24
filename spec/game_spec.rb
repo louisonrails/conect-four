@@ -132,12 +132,12 @@ RSpec.describe Game do
     context 'when the move is valid' do
       before do
         allow(game).to receive(:gets).and_return("1\n")
-        allow(board).to receive(:column_full?).with(0).and_return(false)
+        allow(board).to receive(:column_full?).with(1).and_return(false)
         allow(board).to receive(:drop_disc)
       end
 
       it 'drops a disc in the chosen column' do
-        expect(board).to receive(:drop_disc).with(0, 'X')
+        expect(board).to receive(:drop_disc).with(1, 'X')
         game.turn
       end
 
@@ -150,7 +150,7 @@ RSpec.describe Game do
     context 'when the column is full' do
       before do
         allow(game).to receive(:gets).and_return("1\n", "1\n")
-        allow(board).to receive(:column_full?).with(0).and_return(true, false)
+        allow(board).to receive(:column_full?).with(1).and_return(true, false)
         allow(board).to receive(:drop_disc)
       end
 
@@ -160,7 +160,7 @@ RSpec.describe Game do
       end
 
       it 'eventually drops a disc after retry' do
-        expect(board).to receive(:drop_disc).with(0, 'X')
+        expect(board).to receive(:drop_disc).with(1, 'X')
         game.turn
       end
     end

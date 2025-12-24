@@ -24,7 +24,7 @@ class Game
   def turn
     loop do
       print "#{@current_player.name}, it's your turn! Enter the column: "
-      column = gets.to_i - 1
+      column = gets.to_i
 
       unless @board.column_full?(column)
         @board.drop_disc(column, @current_player.symbol)
@@ -42,7 +42,7 @@ class Game
       break if game_over?
       turn_player
     end
-
+    @board.display
     if @board.win_combination?(@current_player.symbol)
       puts "#{@current_player.name} wins!"
     else
