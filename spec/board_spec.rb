@@ -108,4 +108,33 @@ RSpec.describe Board do
 
   end
 
+  describe '#display' do
+    it 'prints the board to stdout' do
+      board = Board.new
+
+      expected_output = <<~BOARD
+
+        | . . . . . . . |
+        | . . . . . . . |
+        | . . . . . . . |
+        | . . . . . . . |
+        | . . . . . . . |
+        | . . . . . . . |
+        +-----------------+
+          0 1 2 3 4 5 6
+
+      BOARD
+
+      expect { board.display }.to output(expected_output).to_stdout
+    end
+
+    it 'shows dropped discs in the correct positions' do
+      board = Board.new
+      board.drop_disc(0, 'X')
+      board.drop_disc(1, 'O')
+
+      expect { board.display }
+        .to output(/\| X O \. \. \. \. \. \|/).to_stdout
+    end
+  end
 end

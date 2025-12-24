@@ -80,4 +80,14 @@ class Board
     end
   end
 
+  def display
+    puts
+    @grid.each do |row|
+      puts "| " + row.map { |cell| cell.nil? ? "." : cell }.join(" ") + " |"
+    end
+    puts "+-----------------+"
+    puts "  0 1 2 3 4 5 6"
+    puts
+  end
+
 end

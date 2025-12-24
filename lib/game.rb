@@ -37,6 +37,7 @@ class Game
 
   def game
     loop do
+      @board.display
       turn
       break if game_over?
       turn_player
