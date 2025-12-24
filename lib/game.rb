@@ -22,13 +22,30 @@ class Game
   end
 
   def turn
-    print "#{@current_player.name}, it's your turn! Enter the column: "
-    column = gets.to_i - 1
+    loop do
+      print "#{@current_player.name}, it's your turn! Enter the column: "
+      column = gets.to_i - 1
 
-    unless @board.column_full?(column)
-      @board.drop_disc(column, @current_player.symbol)
+      unless @board.column_full?(column)
+        @board.drop_disc(column, @current_player.symbol)
+        break
+      else
+        puts 'Invalid Move! Try Again'
+      end  
+    end  
+  end
+
+  def game
+    loop do
+      turn
+      break if game_over?
+      turn_player
+    end
+
+    if @board.win_combination?(@current_player.symbol)
+      puts "#{@current_player.name} wins!"
     else
-      puts 'Invalid Move! Try Again'
+      puts "It's a tie"
     end
   end
 end

@@ -149,19 +149,74 @@ RSpec.describe Game do
 
     context 'when the column is full' do
       before do
-        allow(game).to receive(:gets).and_return("1\n")
-        allow(board).to receive(:column_full?).with(0).and_return(true)
-      end
-
-      it 'does not drop a disc' do
-        expect(board).not_to receive(:drop_disc)
-        game.turn
+        allow(game).to receive(:gets).and_return("1\n", "1\n")
+        allow(board).to receive(:column_full?).with(0).and_return(true, false)
+        allow(board).to receive(:drop_disc)
       end
 
       it 'prints an invalid move message' do
         expect(game).to receive(:puts).with('Invalid Move! Try Again')
         game.turn
       end
+
+      it 'eventually drops a disc after retry' do
+        expect(board).to receive(:drop_disc).with(0, 'X')
+        game.turn
+      end
+    end
+  end
+
+  describe '#game' do
+    let(:board)   { instance_double(Board) }
+    let(:player1) { Player.new('Dio', 'X') }
+    let(:player2) { Player.new('Johnathan', 'O') }
+
+    subject(:game) { described_class.new(board, player1, player2) }
+
+    before do
+      allow(game).to receive(:turn)
+      allow(game).to receive(:turn_player)
+      allow(game).to receive(:puts)
+    end
+
+    context 'when the current player wins' do
+      before do
+        # First loop iteration runs, then game ends
+        allow(game).to receive(:game_over?).and_return(false, true)
+        allow(board).to receive(:win_combination?)
+          .with(player1.symbol)
+          .and_return(true)
+      end
+
+      it 'announces the winner' do
+        expect(game).to receive(:puts).with('Dio wins!')
+        game.game
+      end
+    end
+
+    context 'when the game ends in a tie' do
+      before do
+        allow(game).to receive(:turn)
+        allow(game).to receive(:turn_player)
+        allow(game).to receive(:game_over?).and_return(true)
+        allow(board).to receive(:win_combination?)
+          .with(player1.symbol)
+          .and_return(false)
+        allow(game).to receive(:puts)
+      end
+
+      it 'announces a tie' do
+        expect(game).to receive(:puts).with("It's a tie")
+        game.game
+      end
+    end
+
+    it 'calls turn at least once' do
+      allow(game).to receive(:game_over?).and_return(true)
+      allow(board).to receive(:win_combination?).and_return(false)
+
+      expect(game).to receive(:turn)
+      game.game
     end
   end
 
